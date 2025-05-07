@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class PathologiesProvider extends ChangeNotifier {
 
   String _typeDamage = '';
+  String _resultPathology = '';
   Map<String, dynamic> _pathologies = {
     'slab_id': 0,
     'name': '',
@@ -20,6 +21,7 @@ class PathologiesProvider extends ChangeNotifier {
 
   //getters
   String get typeDamage => _typeDamage;
+  String get resultPathology => _resultPathology;
   Map<String, dynamic> get pathologies => _pathologies;
 
   //setters
@@ -36,6 +38,11 @@ class PathologiesProvider extends ChangeNotifier {
     } else {
       throw Exception('Key $key not found in pathologies map');
     }
+  }
+
+  setResultPathology(String resultPathology) {
+    _resultPathology = resultPathology;
+    notifyListeners();
   }
 
   removeDataPathology() {

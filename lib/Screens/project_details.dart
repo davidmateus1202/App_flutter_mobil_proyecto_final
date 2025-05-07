@@ -2,8 +2,10 @@ import 'package:diapce/Controllers/project_controller.dart';
 import 'package:diapce/Providers/slab_provider.dart';
 import 'package:diapce/Screens/abscisa.dart';
 import 'package:diapce/Screens/Pathologies/pathologies.dart';
+import 'package:diapce/Screens/project_edit.dart';
 import 'package:diapce/Screens/slab.dart';
 import 'package:diapce/Theme/app.dart';
+import 'package:diapce/Widgets/button_custom.dart';
 import 'package:diapce/Widgets/custom_app_bar.dart';
 import 'package:diapce/Widgets/loading_screen.dart';
 import 'package:diapce/Widgets/text_widget.dart';
@@ -59,23 +61,35 @@ class _ProjectDetailsState extends State<ProjectDetails> {
         slab.clearSlabs(),
         Navigator.pop(context)
       }),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: loading
+      body: loading
               ? LoadingScreen()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
                   children: [
-                    SizedBox(height: 50),
-                    TextWidget(text: widget.project.name, fontSize: 25, fontWeight: FontWeight.w500, maxLines: 2, color: Colors.black),
-                    TextWidget(text: widget.project.description, fontSize: 15, fontWeight: FontWeight.w500, maxLines: 2, color: Colors.grey[400]!),
-                    SizedBox(height: 50),
-                    _buildControl(),
-                    _buildInformation(abscisa, slab),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 50),
+                              TextWidget(text: widget.project.name, fontSize: 25, fontWeight: FontWeight.w500, maxLines: 2, color: Colors.black),
+                              TextWidget(text: widget.project.description, fontSize: 15, fontWeight: FontWeight.w500, maxLines: 2, color: Colors.grey[400]!),
+                              SizedBox(height: 50),
+                              _buildControl(),
+                              _buildInformation(abscisa, slab),
+                            ],
+                          ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                      child: ButtonCustom(context: context, onPressed: () async {}, text: 'Finalizar'),
+                    )
                   ],
                 ),
-      ),
+              ),
     );
   }
 
@@ -148,11 +162,19 @@ class _ProjectDetailsState extends State<ProjectDetails> {
   }
 
   Widget _buildInformation(AbscisaProvider abscisa, SlabProvider slab) {
+    return selected == 'Información'
+        ? _buildButtonRegisterDetails(abscisa, slab)
+        : Container();
+  }
+
+  Widget _buildButtonRegisterDetails(AbscisaProvider abscisa, SlabProvider slab) {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.only(top: 10),
       child: Column(
         spacing: 15,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildButtonInformation(
             icon: Icons.insert_drive_file,
@@ -187,6 +209,12 @@ class _ProjectDetailsState extends State<ProjectDetails> {
             },
             object: slab.countSlabs == 0 ? null : slab.slabs,
           ),
+          TextWidget(
+            text: 'Servicios',
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+          ),
+          _buildListViewButton()
         ],
       ),
     );
@@ -238,5 +266,63 @@ class _ProjectDetailsState extends State<ProjectDetails> {
         ],
       ),
     );
+  }
+
+  Widget _buildListViewButton() {
+    return SizedBox(
+      height: 100,
+      child: Row(
+        children: [
+            _buildButtonService(
+              'Editar',
+              Icon(Icons.edit, color: Colors.white, size: 20), 
+              () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectEdit()));
+              }
+            ),
+            _buildButtonService(
+              'Estadistica',
+              Icon(Icons.bar_chart_rounded, color: Colors.white, size: 20), 
+              () {
+                // Implementar la acción de editar
+              }
+            ),
+        ]
+      )
+    );
+  }
+
+  Widget _buildButtonService(String title, Icon icon, Function onPressed) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => onPressed(),
+        child: Container(
+        margin: EdgeInsets.only(right: 10),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 10,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(25)),
+              child: icon,
+            ),
+            TextWidget(
+                text: title,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.black),
+          ],
+        ),
+            ),
+      ));
   }
 }

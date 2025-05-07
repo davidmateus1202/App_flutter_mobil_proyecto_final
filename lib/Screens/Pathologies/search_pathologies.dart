@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diapce/Controllers/pathologies_controller.dart';
+import 'package:diapce/Providers/pathologies_provider.dart';
 import 'package:diapce/Screens/Pathologies/show_dialog_pathology.dart';
 import 'package:diapce/Widgets/custom_app_bar.dart';
 import 'package:diapce/Widgets/loading_screen.dart';
 import 'package:diapce/Widgets/text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchPathologies extends StatefulWidget {
   const SearchPathologies({super.key});
@@ -47,6 +49,7 @@ class _SearchPathologiesState extends State<SearchPathologies> {
 
   @override
   Widget build(BuildContext context) {
+    final pathologyProvider = context.watch<PathologiesProvider>();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(title: '', onPressed: () => Navigator.pop(context), color: Colors.white),
@@ -62,7 +65,7 @@ class _SearchPathologiesState extends State<SearchPathologies> {
                 _buildSearch(),
                 isLoading
                     ? LoadingScreen(maxHeight: 400)
-                    : _buildList(),
+                    : _buildList(pathologyProvider) 
                     
               ],
             ),
@@ -113,13 +116,13 @@ class _SearchPathologiesState extends State<SearchPathologies> {
   }
 
   // Widget list
-  Widget _buildList() {
+  Widget _buildList(PathologiesProvider pathologyProvider) {
     return pathologies.isNotEmpty
         ? Expanded(
           child: ListView.builder(
               itemCount: pathologies.length,
               itemBuilder: (context, index) {
-                return _buildItem(pathologies[index]);
+                return _buildItem(pathologies[index], pathologyProvider);
               },
             ),
         )
@@ -127,102 +130,108 @@ class _SearchPathologiesState extends State<SearchPathologies> {
   }
 
   //Widget Item
-  Widget _buildItem(dynamic pathology) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 400,
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-            child: CachedNetworkImage(
-              imageUrl: pathology['url_image'],
-              width: MediaQuery.of(context).size.width,
-              height: 300,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
+  Widget _buildItem(dynamic pathology, PathologiesProvider pathologyProvider) {
+    return GestureDetector(
+      onTap: () {
+        pathologyProvider.setDataPathologies('name', pathology['name']);
+        Navigator.pop(context);
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 400,
+        margin: const EdgeInsets.only(bottom: 20),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              child: CachedNetworkImage(
+                imageUrl: pathology['url_image'],
                 width: MediaQuery.of(context).size.width,
                 height: 300,
-                alignment: Alignment.center,
-                child: CircularProgressIndicator(color: Colors.grey[300]),
-              ),
-              errorWidget: (context, url, error) => Container(
-                width: MediaQuery.of(context).size.width,
-                height: 300,
-                alignment: Alignment.center,
-                child: const Icon(Icons.error, color: Colors.red),
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 300,
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator(color: Colors.grey[300]),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 300,
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.error, color: Colors.red),
+                ),
               ),
             ),
-          ),
-
-          // Burbuja superior
-          Positioned(
-            top: 10,
-            right: 10,
-            child: GestureDetector(
-              onTap: () {
-                dialogBuilderPathology(context, pathology['url_image']);
-              },
+      
+            // Burbuja superior
+            Positioned(
+              top: 10,
+              right: 10,
+              child: GestureDetector(
+                onTap: () {
+                  dialogBuilderPathology(context, pathology['url_image']);
+                },
+                child: Container(
+                  width: 35,
+                  height: 35,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 4,
+                        spreadRadius: 1,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.expand_rounded,
+                      color: Colors.black, size: 20),
+                ),
+              ),
+            ),
+      
+            // Información del texto
+            Positioned(
+              bottom: 0,
               child: Container(
-                width: 35,
-                height: 35,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 4,
-                      spreadRadius: 1,
-                      offset: Offset(0, 2),
+                width: MediaQuery.of(context).size.width - 32,
+                color: Colors.grey[200],
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 10,
+                  children: [
+                    TextWidget(
+                      text: pathology['name'],
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      maxLines: 2,
+                    ),
+                    TextWidget(
+                      text: pathology['description'],
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.grey[800]!,
+                      maxLines: 5,
                     ),
                   ],
                 ),
-                child: const Icon(Icons.expand_rounded,
-                    color: Colors.black, size: 20),
               ),
             ),
-          ),
-
-          // Información del texto
-          Positioned(
-            bottom: 0,
-            child: Container(
-              width: MediaQuery.of(context).size.width - 32,
-              color: Colors.grey[200],
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 10,
-                children: [
-                  TextWidget(
-                    text: pathology['name'],
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    maxLines: 2,
-                  ),
-                  TextWidget(
-                    text: pathology['description'],
-                    fontSize: 12,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.grey[800]!,
-                    maxLines: 5,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

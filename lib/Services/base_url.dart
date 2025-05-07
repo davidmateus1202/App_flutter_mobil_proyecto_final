@@ -1,3 +1,3 @@
 class BaseUrl {
-  static String baseUrl = 'http://10.13.128.73:8000//api';
+  static String baseUrl = 'https://diapce-system.com.co/api';
 }

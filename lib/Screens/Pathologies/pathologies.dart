@@ -104,7 +104,7 @@ class _PathologiesState extends State<Pathologies> {
                       child: TextWidget(text: 'Analisis de resultados', fontSize: 16, fontWeight: FontWeight.w500, color: App.primaryColor),
                     ),
                     _buildIndicador(),
-                    _buildPathologies(),
+                    _buildPathologies(pathologiesProvider),
                     Divider(color: Colors.grey[300], thickness: 1),
                     Padding(
                       padding: const EdgeInsets.only(left: 16),
@@ -149,7 +149,7 @@ class _PathologiesState extends State<Pathologies> {
               context: context, 
               onPressed: () async {
                 _pathologiesController.create(
-                  context: context, 
+                  context: context,
                   slab: slab, 
                   longitudDamage: _longitudDamage, 
                   anchoDamage: _anchoDamage, 
@@ -228,7 +228,7 @@ class _PathologiesState extends State<Pathologies> {
                   ? SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 1.0)
+                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.0)
                     )
                   : TextWidget(text: 'Analizar', fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),
             ),
@@ -266,13 +266,13 @@ class _PathologiesState extends State<Pathologies> {
   }
 
   //Row pathologies
-  Widget _buildPathologies() {
+  Widget _buildPathologies(PathologiesProvider pathologiesProvider) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TextWidget(text: data['data']?['label'] ?? '', fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[600]!),
+          TextWidget(text: pathologiesProvider.pathologies['name'] ?? '', fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[600]!),
           GestureDetector(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPathologies()));

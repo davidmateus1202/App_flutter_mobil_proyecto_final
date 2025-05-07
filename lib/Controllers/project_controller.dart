@@ -103,5 +103,58 @@ class ProjectController {
       }
     }
   }
+
+  Future getAllAbscisas({
+    required int id
+  }) async {
+    try {
+      final response = await _projectsApi.getAllAbscisasApi(id: id);
+      if (response.statusCode == 200) {
+        Map<String,dynamic> data = jsonDecode(response.body);
+        return data;
+      }
+      return null;
+
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return null;
+    }
+  }
+
+  // formatear el estado de la abscisa
+  String formatStateAbscisa(String state) {
+    switch (state) {
+      case 'in_progress':
+        return 'En Progreso';
+      case 'finished':
+        return 'Completado';
+      default:
+        return 'Desconocido';
+    }
+  }
+
+  formatStateColorAbscisa(String state) {
+    switch (state) {
+      case 'in_progress':
+        return Colors.yellow[100];
+      case 'finished':
+        return Colors.green[100];
+      default:
+        return Colors.red[100];
+    }
+  }
+
+  formatStateColorTextAbscisa(String state) {
+    switch (state) {
+      case 'in_progress':
+        return Colors.yellow[900];
+      case 'finished':
+        return Colors.green[900];
+      default:
+        return Colors.red[900];
+    }
+  }
   
 }

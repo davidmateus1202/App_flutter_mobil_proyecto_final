@@ -28,7 +28,6 @@ class Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextWidget(text: 'Nuevo', fontSize: 25, color: Colors.white, fontWeight: FontWeight.w500),
           TextWidget(text: title, fontSize: 30, color: Colors.white, fontWeight: FontWeight.w500),
           TextWidget(text: subtitle, fontSize: 12, color: App.grayColor, fontWeight: FontWeight.w300),
         ],

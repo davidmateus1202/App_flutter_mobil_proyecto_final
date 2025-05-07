@@ -96,5 +96,28 @@ class ProjectsApi {
     }
   }
 
+  /// realiza la peticion al servidor para obtener todas las abscisas registradas
+  Future getAllAbscisasApi({
+    required int id
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse('${BaseUrl.baseUrl}/web/projects/show');
+      final token = prefs.getString('token');
 
+      // peticion
+      final response = await http.post(
+        url,
+        headers: { 'Authorization': 'Bearer $token' },
+        body: {
+          'project_id': id.toString()
+        }
+      );
+
+      return response;
+
+    } catch (e) {
+      throw Exception('Failed to get all abscisas ${e.toString()}');
+    }
+  }
 }
