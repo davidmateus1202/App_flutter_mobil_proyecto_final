@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diapce/Widgets/loading_screen.dart';
+import 'package:diapce/Widgets/not_found.dart';
 import 'package:diapce/Widgets/search.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +26,12 @@ class _HomeState extends State<Home> {
     final ScrollController _scrollController = ScrollController();
     final ProjectController _projectController = ProjectController();
     double appBarOpacity = 1.0;
+    bool isLoading = false;
 
     @override
     void initState() {
       super.initState();
-      _projectController.index(context);
+      _loadingContainer();
       _scrollController.addListener(() {
         double offset = _scrollController.offset;
         appBarOpacity = offset <= 100 ? 1.0 : 0.0;
@@ -36,20 +39,33 @@ class _HomeState extends State<Home> {
       });
     }
 
+    _loadingContainer() async {
+      isLoading = true;
+      setState(() {});
+      await _projectController.index(context);
+      isLoading = false;
+      setState(() {});
+    }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
+    final projectProvier = Provider.of<ProjectProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      body: CustomScrollView(
-          controller: _scrollController,
-          slivers: [
-            _buildSliverAppBar(auth),
-            _buildTitle(),
-            _buildList(),
+      body: isLoading
+          ? LoadingScreen(maxHeight: 0)
+          : projectProvier.projects.isEmpty
+          ? NotFound(maxHeight: 0)
+          : CustomScrollView(
+            controller: _scrollController,
+            slivers: [
+              _buildSliverAppBar(auth),
+              _buildTitle(),
+              _buildList(projectProvier),
 
-          ],
-        ),
+            ],
+          ),
     );
   }
 
@@ -84,7 +100,6 @@ class _HomeState extends State<Home> {
                         opacity: appBarOpacity,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-
                           children: [
                             TextWidget(
                               text: 'Hola, ${auth.name}',
@@ -121,14 +136,14 @@ class _HomeState extends State<Home> {
     );
   }
 
-  SliverList _buildList() {
-    final projectProvier = Provider.of<ProjectProvider>(context);
+  SliverList _buildList(ProjectProvider projectProvider) {
+    
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return _buildCardProyect(projectProvier.projects[index]);
+          return _buildCardProyect(projectProvider.projects[index]);
         },
-        childCount: projectProvier.projects.length,
+        childCount: projectProvider.projects.length,
       ),
     );
   }

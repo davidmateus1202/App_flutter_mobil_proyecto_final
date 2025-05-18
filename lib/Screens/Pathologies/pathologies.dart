@@ -272,7 +272,7 @@ class _PathologiesState extends State<Pathologies> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TextWidget(text: pathologiesProvider.pathologies['name'] ?? '', fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[600]!),
+          Expanded(child: TextWidget(text: pathologiesProvider.pathologies['name'] ?? '', fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[600]!, maxLines: 2,)),
           GestureDetector(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPathologies()));

@@ -156,5 +156,4 @@ class ProjectController {
         return Colors.red[900];
     }
   }
-  
 }

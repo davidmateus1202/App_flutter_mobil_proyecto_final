@@ -58,4 +58,9 @@ class SlabProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  removeSlab() {
+    _slabSelected = null;
+    notifyListeners();
+  }
+
 }

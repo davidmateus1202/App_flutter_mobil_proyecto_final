@@ -1,11 +1,18 @@
 import 'package:diapce/Controllers/project_controller.dart';
+import 'package:diapce/Screens/EditDataProject/pathologies_edit.dart';
 import 'package:diapce/Widgets/custom_app_bar.dart';
 import 'package:diapce/Widgets/loading_screen.dart';
+import 'package:diapce/Widgets/not_found.dart';
 import 'package:diapce/Widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProjectEdit extends StatefulWidget {
-  const ProjectEdit({super.key});
+  const ProjectEdit({
+    super.key,
+    required this.id,
+  });
+
+  final int id;
 
   @override
   State<ProjectEdit> createState() => _ProjectEditState();
@@ -22,16 +29,14 @@ class _ProjectEditState extends State<ProjectEdit> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _loadDaata();
+    _loadData();
   }
 
-  _loadDaata() async {
+  _loadData() async {
     _isLoading = true;
     setState(() {});
-    final response = await _projectController.getAllAbscisas(id: 22);
-    print('response: $response');
+    final response = await _projectController.getAllAbscisas(id: widget.id);
     if (response != null) {
       // do something with the response
       _abscisas = response['data']['data'];
@@ -49,21 +54,23 @@ class _ProjectEditState extends State<ProjectEdit> {
       appBar: CustomAppBar(title: '', onPressed: () { Navigator.pop(context);}),
       body: _isLoading 
         ? LoadingScreen(maxHeight: 200,)
-        : SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            spacing: 10,
-            children: [
-              SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildSearch(),
-              ),
-              _buildList()
-            ],
+        : _abscisas.isEmpty
+          ? NotFound()
+          : SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              spacing: 10,
+              children: [
+                SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: _buildSearch(),
+                ),
+                _buildList()
+              ],
+            ),
           ),
-        )
     );
   }
 
@@ -210,7 +217,7 @@ class _ProjectEditState extends State<ProjectEdit> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PathologiesEdit(pathologies: slabs['pathologies'],)));
                   },
                   child: Container(
                     width: 30,

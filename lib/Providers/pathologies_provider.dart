@@ -30,6 +30,11 @@ class PathologiesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  removeTypeDamage() {
+    _typeDamage = '';
+    notifyListeners();
+  }
+
   // setters for pathologies
   setDataPathologies(String key, dynamic value) {
     if (_pathologies.containsKey(key)) {

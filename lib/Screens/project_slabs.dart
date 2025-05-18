@@ -39,66 +39,71 @@ class _ProjectSlabsState extends State<ProjectSlabs> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              TextWidget(text: 'Placas de estudio', fontSize: 20, fontWeight: FontWeight.w500),
-              _buildSlab(slabs.slabs),
-            ],
-          ),
+          child: _buildSlab(slabs.slabs),
         ),
     );
   }
 
   // Widget slab
   Widget _buildSlab(List<SlabModel> slabs) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: slabs.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () { _saveSlab(slabs[index]); },
-            behavior: HitTestBehavior.translucent,
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextWidget(text: 'Placa - ${slabs[index].id}', fontSize: 16, fontWeight: FontWeight.w500),
-                            TextWidget(
-                              text: 'Area: ${_pathologiesController.calculedArea(long: slabs[index].long, width: slabs[index].width)} cm2',
-                              fontSize: 12,
-                              color: Colors.grey[600]!,
-                            )
-                          ],
-                        ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => GoogleMapsScreen(latitude: double.tryParse(slabs[index].latitude.toString()) ?? 0.0, longitude: double.tryParse(slabs[index].longitude.toString()) ?? 0.0))),
-                        child: Container(
-                          width: 45,
-                          height: 45,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: App.primaryColor,
-                            borderRadius: BorderRadius.all(Radius.circular(50))
-                          ),
-                          child: Icon(Icons.map, color: Colors.white, size: 20),
-                        ),
-                      )
-                    ],
+  return ListView.builder(
+    itemCount: slabs.length,
+    itemBuilder: (context, index) {
+      return GestureDetector(
+        onTap: () { _saveSlab(slabs[index]); },
+        behavior: HitTestBehavior.translucent,
+        child: Container(
+          margin: EdgeInsets.only(bottom: 10),
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextWidget(text: 'Placa - ${slabs[index].id}', fontSize: 16, fontWeight: FontWeight.w500),
+                    TextWidget(
+                      text: 'Area: ${_pathologiesController.calculedArea(long: slabs[index].long, width: slabs[index].width)} m2',
+                      fontSize: 12,
+                      color: Colors.grey[600]!,
+                    )
+                  ],
+                ),
+              ),
+              Spacer(),
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GoogleMapsScreen(
+                      latitude: double.tryParse(slabs[index].latitude.toString()) ?? 0.0,
+                      longitude: double.tryParse(slabs[index].longitude.toString()) ?? 0.0,
+                      id: slabs[index].id,
+                    ),
                   ),
                 ),
-                Divider(color: Colors.grey[300]),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
+                child: Container(
+                  width: 45,
+                  height: 45,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: App.primaryColor,
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                  ),
+                  child: Icon(Icons.map, color: Colors.white, size: 20),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 }

@@ -29,4 +29,29 @@ class AbscisaApi {
       throw Exception('Failed to create abscisa ${e.toString()}');
     }
   }
+
+  Future<http.Response> changeStatus({
+    required int abscisaId,
+    required String status,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse('${BaseUrl.baseUrl}/abscisa/change/status');
+      final token = prefs.getString('token');
+
+      final response = await http.post(
+        url,
+        headers: { 'Authorization': 'Bearer $token' },
+        body: {
+          "abscisa_id": "$abscisaId",
+          "status": status,
+        }
+      );
+
+      return response;
+
+    } catch (e) {
+      throw Exception('Failed to change status ${e.toString()}');
+    }
+  }
 }

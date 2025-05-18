@@ -7,10 +7,12 @@ class GoogleMapsScreen extends StatefulWidget {
     super.key,
     required this.latitude,
     required this.longitude,
+    required this.id,
     });
 
   final double latitude;
   final double longitude;
+  final int id;
   @override
   State<GoogleMapsScreen> createState() => _GoogleMapsScreenState();
 }
@@ -29,6 +31,18 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final Set<Marker> _markers = {
+      Marker(
+        markerId: const MarkerId('Placa'),
+        position: LatLng(widget.latitude, widget.longitude),
+        infoWindow: InfoWindow(
+          title: 'Placa - ${widget.id}',
+          snippet: 'Ubicación de la placa',
+        ),
+      ),
+    };
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(title: '', onPressed: () => Navigator.pop(context), color: Colors.white),
@@ -36,7 +50,10 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: GoogleMap(initialCameraPosition: _initialCameraPosition),
+          child: GoogleMap(
+            initialCameraPosition: _initialCameraPosition,
+            markers: _markers,
+            ),
         ),
       )
     );

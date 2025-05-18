@@ -1,8 +1,9 @@
+import 'package:diapce/Controllers/abscisa_controller.dart';
 import 'package:diapce/Controllers/project_controller.dart';
 import 'package:diapce/Providers/slab_provider.dart';
 import 'package:diapce/Screens/abscisa.dart';
 import 'package:diapce/Screens/Pathologies/pathologies.dart';
-import 'package:diapce/Screens/project_edit.dart';
+import 'package:diapce/Screens/EditDataProject/project_edit.dart';
 import 'package:diapce/Screens/slab.dart';
 import 'package:diapce/Theme/app.dart';
 import 'package:diapce/Widgets/button_custom.dart';
@@ -33,6 +34,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
 
   // instancia de controlador de proyecto
   final ProjectController _projectController = ProjectController();
+  final AbscisaController _abscisaController = AbscisaController();
 
   @override
   void initState() {
@@ -85,7 +87,12 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-                      child: ButtonCustom(context: context, onPressed: () async {}, text: 'Finalizar'),
+                      child: ButtonCustom(context: context, onPressed: () async {
+                        if (abscisa.abscisa != null) {
+                          await _abscisaController.changeStatus(abscisa_id: abscisa.abscisa!.id , status: 'finished', context: context);
+                          Navigator.pop(context);
+                        }
+                      }, text: 'Finalizar'),
                     )
                   ],
                 ),
@@ -277,7 +284,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
               'Editar',
               Icon(Icons.edit, color: Colors.white, size: 20), 
               () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectEdit()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectEdit(id: widget.project.id)));
               }
             ),
             _buildButtonService(

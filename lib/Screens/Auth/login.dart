@@ -32,7 +32,7 @@ class _LoginState extends State<Login> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset('assets/images/icon.png'),
+          Image.asset('assets/images/icon.png', width: 150),
           TextWidget(text: 'Inicio de Sesion', fontSize: 25, fontWeight: FontWeight.w500),
           ButtonCustom(context: context, onPressed: () async {formLogin(context);}, text: 'Ingresar'),
           _buildButtonRegister(),

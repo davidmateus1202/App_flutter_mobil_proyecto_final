@@ -51,12 +51,40 @@ class PathologiesController {
     }
   }
 
+  formatTypeDamage(String typeDamage) {
+    switch (typeDamage) {
+      case 'low':
+        return 'Bajo';
+      case 'half':
+        return 'Medio';
+      case 'high':
+        return 'Alto';
+      default:
+        return 'Nivel de severidad';
+    }
+  }
+
+  formatTypeColor(String typeDamage) {
+    switch (typeDamage) {
+      case 'low':
+        return Colors.amber;
+      case 'half':
+        return Colors.orange;
+      case 'high':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
   /// get all slabs by project
   calculedArea({
     required double long,
     required double width,
   }) {
-    return long * width;
+    double longM = long / 100;
+    double widthM = width / 100;
+    return longM * widthM;
   }
 
   /// get all concepts by pathology
@@ -105,9 +133,12 @@ class PathologiesController {
     pathology.setDataPathologies('type_repair_width', 'cm');
 
     final response = await _pathologiesApi.create(pathologyProvider: pathology);
-    
+
     if (response.statusCode == 201) {
       pathology.removeDataPathology();
+      pathology.removeTypeDamage();
+      slab.removeSlab();
+
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } else {
