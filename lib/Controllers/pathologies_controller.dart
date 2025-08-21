@@ -22,8 +22,10 @@ class PathologiesController {
     File? compressFile = await _projectController.compressImageFuntion(XFile(image!.path));
     final response = await _pathologiesApi.analyzePathology(image: compressFile);
     if (response.statusCode == 200) {
+      print('Respuesta de la API:');
       final String data = await response.stream.bytesToString();
       Map<String, dynamic> jsonData = jsonDecode(data);
+      print(jsonData);
       return jsonData;
     }
   }

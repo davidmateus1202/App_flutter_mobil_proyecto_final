@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diapce/Screens/qr_scanner.dart';
 import 'package:diapce/Widgets/loading_screen.dart';
 import 'package:diapce/Widgets/not_found.dart';
 import 'package:diapce/Widgets/search.dart';
@@ -66,7 +67,9 @@ class _HomeState extends State<Home> {
 
             ],
           ),
+      floatingActionButton: FloatingActionButton(onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => QrScanner()));}, backgroundColor: Colors.black, child: Icon(Icons.add, color: Colors.white,), shape: CircleBorder()),
     );
+
   }
 
   SliverPersistentHeader _buildSliverAppBar(AuthProvider auth) {

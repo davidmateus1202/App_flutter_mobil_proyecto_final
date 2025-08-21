@@ -120,4 +120,26 @@ class ProjectsApi {
       throw Exception('Failed to get all abscisas ${e.toString()}');
     }
   }
+
+  // registrar un nuevo usuario en el proyecto
+  Future newRegisterCollaborator(String code) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final url = Uri.parse('${BaseUrl.baseUrl}/project/register-new-collaborator');
+      final token = prefs.getString('token');
+
+      final response = await http.post(
+        url,
+        headers: { 'Authorization' : 'Bearer $token' },
+        body: {
+          'project_id': code
+        }
+      );
+      
+      return response;
+
+    } catch (e) {
+      throw Exception('Failed to register collaborator ${e.toString()}');
+    }
+  }
 }

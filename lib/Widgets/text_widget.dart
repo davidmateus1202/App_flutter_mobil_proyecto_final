@@ -8,7 +8,8 @@ class TextWidget extends StatelessWidget {
     super.key,
     required this.fontSize,
     this.maxLines = 1,
-    this.fontWeight = FontWeight.normal
+    this.fontWeight = FontWeight.normal,
+    this.textAlign = TextAlign.left,
   });
 
   final String text;
@@ -16,6 +17,7 @@ class TextWidget extends StatelessWidget {
   final double fontSize;
   final int maxLines;
   final FontWeight fontWeight;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class TextWidget extends StatelessWidget {
         fontFamily: 'Poppins',
       ),
       overflow: TextOverflow.ellipsis,
-      textAlign: TextAlign.left,
+      textAlign: textAlign,
       maxLines: maxLines
     );
   }

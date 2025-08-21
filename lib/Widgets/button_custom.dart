@@ -9,12 +9,16 @@ class ButtonCustom extends StatefulWidget {
     required this.onPressed,
     required this.text,
     this.width,
+    this.colorCustom = Colors.black,
+    this.textColor = Colors.white,
     });
 
     final Future Function() onPressed;
     final String text;
     final double? width;
     final BuildContext context;
+    final Color colorCustom;
+    final Color textColor;
 
   @override
   State<ButtonCustom> createState() => _ButtonCustomState();
@@ -39,10 +43,11 @@ class _ButtonCustomState extends State<ButtonCustom> {
         height: 55,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: App.primaryColor,
-          borderRadius: BorderRadius.circular(50)
+          color: widget.colorCustom,
+          borderRadius: BorderRadius.circular(50),
+          border: Border.all(color: App.primaryColor, width: 2),
         ),
-        child: loading ? SizedBox(width: 25, height: 25, child: CircularProgressIndicator(color: Colors.white)) : TextWidget(text: widget.text, fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500),
+        child: loading ? SizedBox(width: 25, height: 25, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 1,)) : TextWidget(text: widget.text, fontSize: 14, color: widget.textColor, fontWeight: FontWeight.w500),
       ),
     );
   }

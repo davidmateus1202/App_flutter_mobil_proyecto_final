@@ -60,11 +60,11 @@ class _PathologiesState extends State<Pathologies> {
         isloading = true;
         setState(() {});
         data = await _pathologiesController.analyzePathology(image: image);
-        porcentaje = _pathologiesController.formatPercentage(data['data']['confidence']);
-
+        // porcentaje = _pathologiesController.formatPercentage(data['data']['confidence']);
+        print(data);
         // almacenar la imagen de la patologia
         pathologyProvider.setDataPathologies('url_image', data['image']);
-        pathologyProvider.setDataPathologies('name', data['data']['label']);
+        pathologyProvider.setDataPathologies('name', data['data']['predicted_class']);
 
         isloading = false;
         setState(() {});

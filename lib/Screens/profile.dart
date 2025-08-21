@@ -1,5 +1,7 @@
+import 'package:diapce/Screens/Auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Providers/auth_provider.dart';
 import '../Theme/app.dart';
@@ -110,6 +112,15 @@ class _ProfileState extends State<Profile> {
           Icon(Icons.more, color: App.grayColor), 
           TextWidget(text: 'Mas', fontSize: 16, fontWeight: FontWeight.w500), 
           () {}
+          ),
+          _item(
+          Icon(Icons.logout, color: App.grayColor), 
+          TextWidget(text: 'Cerrar sesión', fontSize: 16, fontWeight: FontWeight.w500), 
+          () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.clear();
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Login()), (_) => false);
+          }
           ),
         ],
       );

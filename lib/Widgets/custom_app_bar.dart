@@ -9,12 +9,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.onPressed,
     this.icon = const Icon(Icons.arrow_back_ios_new),
     this.color = Colors.white,
+    this.iconButton = const IconButton(onPressed: null, icon: Icon(Icons.person_add_alt_1)),
+    this.showIconButton = false,
+
   });
 
   final String title;
   final Function onPressed;
   final Icon icon;
   final Color color;
+  final IconButton iconButton;
+  final bool showIconButton;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +37,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () => onPressed(),
         ),
       ),
+      actions: [
+        if (showIconButton)
+          iconButton
+      ],
     );
   }
 }

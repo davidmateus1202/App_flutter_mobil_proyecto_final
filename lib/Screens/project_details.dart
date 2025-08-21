@@ -4,6 +4,7 @@ import 'package:diapce/Providers/slab_provider.dart';
 import 'package:diapce/Screens/abscisa.dart';
 import 'package:diapce/Screens/Pathologies/pathologies.dart';
 import 'package:diapce/Screens/EditDataProject/project_edit.dart';
+import 'package:diapce/Screens/register_collaborator.dart';
 import 'package:diapce/Screens/slab.dart';
 import 'package:diapce/Theme/app.dart';
 import 'package:diapce/Widgets/button_custom.dart';
@@ -58,11 +59,20 @@ class _ProjectDetailsState extends State<ProjectDetails> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(title: '', onPressed: () => {
-        abscisa.clearAbscisa(),
-        slab.clearSlabs(),
-        Navigator.pop(context)
-      }),
+      appBar: CustomAppBar(title: '', 
+        onPressed: () => {
+          abscisa.clearAbscisa(),
+          slab.clearSlabs(),
+          Navigator.pop(context)
+        },
+        showIconButton: true,
+        iconButton: IconButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterCollaborator(project: widget.project,)));
+          }, 
+          icon: Icon(Icons.person_add_alt_1, color: Colors.black)
+        ),
+      ),
       body: loading
               ? LoadingScreen()
               : Padding(
